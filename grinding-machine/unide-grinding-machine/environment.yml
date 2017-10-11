@@ -1,0 +1,9 @@
+name: unide-grinding-machine
+
+dependencies:
+  - python
+  - pip
+  - pip:
+    - click
+    - requests
+    - unide-python

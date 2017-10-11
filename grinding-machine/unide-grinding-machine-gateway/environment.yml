@@ -1,0 +1,12 @@
+name: unide-grinding-machine-gateway
+
+dependencies:
+  - python
+  - scikit-learn
+  - scipy
+  - pip
+  - pip:
+    - morepath
+    - click
+    - requests
+    - unide-python
