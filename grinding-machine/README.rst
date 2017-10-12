@@ -107,7 +107,7 @@ There are four entities in our solution architecture:
   in the cloud.
 
 In our Unide testbed, the grinding machine itself and the constrained device
-are represented by the python programme `<unide-grinding-machine>`_),
-whereas the gateway is represented by `<unide-grinding-machine-gateway>`_).
+are represented by the python programme `<unide-grinding-machine>`_,
+whereas the gateway is represented by `<unide-grinding-machine-gateway>`_.
 Finally the "final station" platform is represented by the Eclipse-Unide backend.
 
