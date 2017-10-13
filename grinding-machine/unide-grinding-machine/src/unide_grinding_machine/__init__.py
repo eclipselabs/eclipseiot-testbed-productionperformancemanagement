@@ -1,7 +1,12 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# coding: utf-8
+#
+# Copyright (c) 2017 Contact Software.
+#
+# All rights reserved. This program and the accompanying materials are
+# made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution.
+#
+# The Eclipse Public License is available at
+#     http://www.eclipse.org/legal/epl-v10.html
 
-"""Top-level package for Unide Grinding Machine."""
-
-__author__ = """Bor Gonzalez-Usach"""
-__email__ = 'bgu@contact.de'
-__version__ = '0.1.0'

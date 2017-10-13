@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 #
-# Copyright (C) 1990 - 2017 CONTACT Software GmbH
-# All rights reserved.
-# http://www.contact.de/
+# Copyright (c) 2017 Contact Software.
 #
+# All rights reserved. This program and the accompanying materials are
+# made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution.
+#
+# The Eclipse Public License is available at
+#     http://www.eclipse.org/legal/epl-v10.html
 
 """
 Main module
