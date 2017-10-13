@@ -35,7 +35,7 @@ the workpiece with. A ballscrew is conceptually very similar to a leadscrew,
 which consists of a screw shaft and a nut connected to it, so that the turning
 motion of the shaft is converted to linear motion of the nut. However, a
 ballscrew uses a ball bearing instead of a nut, which provides better
-efficiency and precision. The shaft rotation is provided by an electrical
+efficiency and precision. The shaft rotation is provided by an electric
 motor.
 
 Why condition monitoring
