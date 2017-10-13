@@ -29,7 +29,7 @@ grinding wheel, which is made of abrasive material. At the contact point
 between it and the workpiece, the grinding wheel has a higher linear speed,
 resulting in friction and the desired material removal. 
 
-The ballscrew(s) is a linear actuator that is responsible for the relative
+The ballscrew is a linear actuator that is responsible for the relative
 position of the wheels to each other, and the force which they are squeezing
 the workpiece with. A ballscrew is conceptually very similar to a leadscrew,
 which consists of a screw shaft and a nut connected to it, so that the turning
