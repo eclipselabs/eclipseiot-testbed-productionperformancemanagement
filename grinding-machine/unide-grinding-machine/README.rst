@@ -30,6 +30,26 @@ Once installed, the command ``unide-grinding-machine`` should be accessible::
       send       Creates and sends a standard PPMP message.
 
 
+CLI Documentation
+-----------------
+
+Every command and subcommand is provided with documentation. For instance, if
+you want to know how ``send`` works, just call it passing ``-h`` or
+``--help``::
+
+  > unide-grinding-machine send -h
+  Usage: unide-grinding-machine send [OPTIONS] RESULT
+
+    Creates and sends a standard PPMP message. RESULT must be one of: good,
+    medium, bad. A data set will be randomly chosen within the result type.
+
+  Options:
+    --endpoint TEXT   URL of HTTP endpoint to POST the PPMP message to. If not
+                      provided, it will be sent to stdout
+    --device-id TEXT  ID of device to be sent  [default: device-001]
+    -h, --help        Show this message and exit.
+
+
 Basic test
 ----------
 Run the command ``unide-grinding-machine send good`` (``pwd`` must be the repository root).
