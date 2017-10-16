@@ -67,10 +67,10 @@ for condition monitoring.
 What and how to monitor
 -----------------------
 
-One of the possible indicators of the condition of the ballscrew is the machine
-vibration. Different levels of deterioration result in different profiles of
-vibration. This vibration can be measured with the help of an acceleration
-sensor attached to the machine.
+One of the possible indicators of the condition of the ballscrew is the
+vibration, since different levels of deterioration result in different profiles
+of vibration. This can be measured with the help of an acceleration sensor
+attached to the machine.
 
 However, the vibration profile is not dependent only on the health of the
 ballscrew but other factors as well, for instance the forces that the wheels
