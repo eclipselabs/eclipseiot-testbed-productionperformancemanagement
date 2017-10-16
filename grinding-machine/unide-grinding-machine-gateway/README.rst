@@ -58,9 +58,43 @@ you want to know how ``receive_message`` works, just call it passing ``-h`` or
 
 
 
-Basic test
-----------
+Examples
+--------
+
+Basic local
+'''''''''''
 
 Run the command ``unide-grinding-machine-gateway receive_message
 samples/sample-ppmp.json`` (``pwd`` must be the repository root). This will
 load a sample message and output the results to stdout.
+
+
+Basic with remote backend
+'''''''''''''''''''''''''
+
+This example is almost the same as the previous one, with the only difference that
+the results will be sent via PPMP over HTTP to a given backend. Given the imaginary
+backend endpoint ``http://some-random-backend.com/ppmp-msg``::
+
+  unide-grinding-machine-gateway receive_message samples/sample-ppmp.json --endpoint=http://some-random-backend.com/ppmp-msg
+
+
+Local server connected to backend
+'''''''''''''''''''''''''''''''''
+
+This is a more realistic scenario, in which ``unide-grinding-machine-gateway``
+acts as a HTTP server waiting on incoming messages, processing any inbound
+message and transferring the results via PPMP/HTTP to another backend.
+
+For instance, given the endpoint ``http://some-random-backend.com/ppmp-msg``,
+the CLI call would look like this::
+
+  > unide-grinding-machine-gateway start_server --endpoint=http://some-random-backend.com/ppmp-msg
+  Running <unide_grinding_machine_gateway.server.App object at 0x0792EED0>
+  Listening on http://127.0.0.1:5000
+  Press Ctrl-C to stop...
+ 
+(So far, this will only listen on ``localhost:5000``)
+
+This service can be easily addressed by ``unide-grinding-machine <../unide-grinding-machine>`_.
+
