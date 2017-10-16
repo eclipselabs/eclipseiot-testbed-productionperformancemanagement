@@ -96,5 +96,5 @@ the CLI call would look like this::
  
 (So far, this will only listen on ``localhost:5000``)
 
-This service can be easily addressed by ``unide-grinding-machine <../unide-grinding-machine>`_.
+This service can be easily addressed by `unide-grinding-machine <../unide-grinding-machine>`_.
 
