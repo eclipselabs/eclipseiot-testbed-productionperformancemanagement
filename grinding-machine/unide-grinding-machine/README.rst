@@ -8,14 +8,17 @@ and sends it to the gateway.
 
 How to install
 --------------
-The easiest way is via direct git checkout and conda environments. To do so, follow these steps:
 
-- ``git clone <repo-url> && cd unide-grinding-machine``
-- ``conda env create --file=environment.yml --prefix=env``
-- activate the conda environment. Depending on your platform, this may be
-  ``activate env`` or ``source activate env``
-- ``pip install .`` or, if you wish to tinker with the source code: ``pip install --editable=.``
+The easiest way is via direct git checkout and conda environments. To do so,
+follow these steps:
 
+- ``git clone <repo-url>``
+- ``cd eclipseiot-testbed-productionperformancemanagement/grinding-machine/unide-grinding-machine``
+- ``conda env create --prefix=env``
+
+Once installed, the conda environment has to be activated. Depending on your
+platform, this may be ``activate env`` or ``source activate env``. Then the
+command ``unide-grinding-machine`` should be accessible::
 
 Once installed, the command ``unide-grinding-machine`` should be accessible::
 

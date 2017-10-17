@@ -4,6 +4,4 @@ dependencies:
   - python
   - pip
   - pip:
-    - click
-    - requests
-    - unide-python
+    - '--editable=.'

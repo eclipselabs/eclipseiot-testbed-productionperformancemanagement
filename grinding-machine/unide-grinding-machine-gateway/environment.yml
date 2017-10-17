@@ -6,7 +6,5 @@ dependencies:
   - scipy
   - pip
   - pip:
-    - morepath
-    - click
-    - requests
-    - unide-python
+    - '--editable=.'
+
