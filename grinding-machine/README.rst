@@ -14,7 +14,8 @@ What is a grinding machine
 --------------------------
 
 A grinding machine is a device used to remove material from a cylindrical
-workpiece.
+workpiece. See `this video <media/grinding-machine-in-action.mp4>`_
+for better understanding.
 
 In short, this kind of machine consists of a grinding wheel, a back-up wheel
 and a resting platform. The workpiece is placed on top of the resting platform
