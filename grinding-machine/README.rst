@@ -39,8 +39,18 @@ ballscrew uses a ball bearing instead of a nut, which provides better
 efficiency and precision. The shaft rotation is provided by an electric
 motor.
 
+.. raw:: html
+  <a 
+    title="By W.Rebel (Own work) [GFDL (http://www.gnu.org/copyleft/fdl.html) or CC BY 3.0 (http://creativecommons.org/licenses/by/3.0)], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File%3AGearBoxRotLinScrew.gif">
+    <img width="256" alt="GearBoxRotLinScrew" src="https://upload.wikimedia.org/wikipedia/commons/7/7f/GearBoxRotLinScrew.gif"/>
+    </a>
+
 .. image:: media/ball-screw.jpg
   :alt: Ballscrew
+  :align: center
+
+
+
 
 Why condition monitoring
 ------------------------
