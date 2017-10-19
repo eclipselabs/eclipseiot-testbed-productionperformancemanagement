@@ -17,10 +17,9 @@ from unide.measurement import MeasurementPayload
 from unide.measurement import Measurement
 
 from . import stats
-from . import io
 
 
-def process_inbound_message(msg, classifier, endpoint=None):
+def process_inbound_message(msg, classifier):
     inbound_msg = util.loads(msg, validate=True)
 
     data = stats.load_from_ppmp_msg(inbound_msg)
@@ -43,12 +42,4 @@ def process_inbound_message(msg, classifier, endpoint=None):
         measurements=[meas]
     )
 
-    serialized_out = util.dumps(outbound_msg, indent=2)
-
-    if not endpoint:
-        io.stdout(serialized_out)
-        return
-
-    io.post(endpoint, serialized_out)
-    io.stderr('Message succesfully sent to: %s\n%s' % (endpoint, serialized_out))
-
+    return util.dumps(outbound_msg, indent=2)

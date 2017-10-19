@@ -24,6 +24,16 @@ def stdout(msg):
     print(msg)
 
 
-def post(url, payload):
-    r = requests.post(url, payload)
+def create_poster(url, auth=None):
+    session = requests.Session()
+    session.auth = auth
+
+    def post(payload):
+        session.post(url, payload)
+
+    return post
+
+
+def post(url, payload, auth=None):
+    r = requests.post(url, payload, auth=auth)
     r.raise_for_status()

@@ -20,9 +20,14 @@ from . import io
 
 class App(morepath.App):
 
-    def __init__(self, classifier, endpoint):
+    def __init__(self, classifier, forward):
+        """
+        :param classifier: instance of ML classifier
+        :param forward: callback to call with results to forward data to the desired place
+
+        """
         self.unide_clf = classifier
-        self.unide_endpoint = endpoint
+        self.unide_forward = forward
 
 
 @App.path(path='')
@@ -34,14 +39,25 @@ class Root(object):
 def parse_message(self, request):
     io.stderr('Message received: %s...\n' % request.body[:70])
 
-    core.process_inbound_message(
+    result = core.process_inbound_message(
         msg=request.body,
         classifier=request.app.unide_clf,
-        endpoint=request.app.unide_endpoint,
     )
 
+    request.app.unide_forward(result)
 
-def start_server(classifier, endpoint):
-    morepath.run(App(classifier, endpoint), ignore_cli=True)
+
+def start_server(classifier, endpoint, auth):
+    if endpoint:
+        post = io.create_poster(endpoint, auth)
+
+        def forward(payload):
+            post(payload)
+            io.stderr('Message succesfully sent to: %s\n%s' % (endpoint, payload))
+
+    else:
+        forward = io.stdout
+
+    morepath.run(App(classifier, forward), ignore_cli=True)
 
 

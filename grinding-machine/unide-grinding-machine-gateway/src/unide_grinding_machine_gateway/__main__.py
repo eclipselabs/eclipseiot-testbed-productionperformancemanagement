@@ -42,6 +42,29 @@ http_endpoint = c.option(
 )
 
 
+class AuthParam(c.types.ParamType):
+
+    def __init__(self):
+        self.name = 'auth'
+
+    def convert(self, value, param, ctx):
+        if os.path.isfile(value):
+            with open(value) as f:
+                value = f.read()
+
+        user, _, passw = (value.partition(':'))
+
+        return user.strip(), passw.strip()
+
+
+auth_option = c.option(
+    '--auth',
+    help='Credentials for HTTP request. Either a string in the form <user>[:<password>] ' +
+         'or a file path of which contents are a string in that very form.',
+    type=AuthParam(),
+)
+
+
 @main.command()
 @c.option('--training-data', default=ml.STD_TRAINING_DATA, show_default=True, type=c.Path(exists=True, file_okay=False))
 @clf_path
@@ -59,19 +82,25 @@ def train(training_data, classifier_path):
 @main.command()
 @clf_path
 @http_endpoint
-def start_server(classifier_path, endpoint):
+@auth_option
+def start_server(classifier_path, endpoint, auth):
     """
     Starts demo server that listens to PPMP messages
 
     """
-    server.start_server(ml.Classifier.from_file(classifier_path), endpoint)
+    server.start_server(
+        classifier=ml.Classifier.from_file(classifier_path),
+        endpoint=endpoint,
+        auth=auth,
+    )
 
 
 @main.command()
 @c.argument('ppmp-msg-path')
 @http_endpoint
 @clf_path
-def receive_message(ppmp_msg_path, endpoint, classifier_path):
+@auth_option
+def receive_message(ppmp_msg_path, endpoint, classifier_path, auth):
     """
     Processes an PPMP message coming from the Grinding Machine.
 
@@ -91,11 +120,17 @@ def receive_message(ppmp_msg_path, endpoint, classifier_path):
     with input_file:
         raw_msg = input_file.read()
 
-    core.process_inbound_message(
+    serialized_out = core.process_inbound_message(
         raw_msg,
         classifier=ml.Classifier.from_file(classifier_path),
-        endpoint=endpoint,
     )
+
+    if not endpoint:
+        io.stdout(serialized_out)
+        return
+
+    io.post(endpoint, serialized_out, auth)
+    io.stderr('Message succesfully sent to: %s\n%s' % (endpoint, serialized_out))
 
 
 if __name__ == '__main__':
