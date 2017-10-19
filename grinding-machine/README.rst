@@ -24,7 +24,7 @@ to remove material. There is as well one (or two) ballscrews that push the
 wheels together, or moves them away from each other.
 
 More in detail, the back-up wheel is usually made of rubber or other grippy
-material. Its task is to both to transmit torque to the workpiece and to
+material. Its task is to transmit torque to the workpiece and to
 counterbalance the force of the grinding wheel. From the other side comes the
 grinding wheel, which is made of abrasive material. At the contact point
 between it and the workpiece, the grinding wheel has a higher linear speed,
