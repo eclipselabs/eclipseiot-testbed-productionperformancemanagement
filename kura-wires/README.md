@@ -5,11 +5,11 @@ The initial version of the PPMP Wire Component for Eclipse Kura supports a subse
 - Install the Kura PPMP Wire Component deployment package found [here](https://raw.githubusercontent.com/eclipselabs/master/eclipseiot-testbed-productionperformancemanagement/kura-ppmp.dp)
 - Add a Timer, Driver, and PPMP Wire component to your Wire Graph
 
- ![](https://raw.githubusercontent.com/eclipselabs/master/eclipseiot-testbed-productionperformancemanagement/kura-wires.png))
+ ![](https://raw.githubusercontent.com/eclipselabs/master/eclipseiot-testbed-productionperformancemanagement/kura-wires.png)
 
 - Select the Driver and add channels for the measurements that will be sent to the PPMP component
 
- ![](https://raw.githubusercontent.com/eclipselabs/master/eclipseiot-testbed-productionperformancemanagement/driver-configuration.png))
+ ![](https://raw.githubusercontent.com/eclipselabs/master/eclipseiot-testbed-productionperformancemanagement/driver-configuration.png)
 
 - Select the PPMP component and enter information for publishing
   - ppmp.poll.interval – The number of Kura Wires Timer intervals to wait before publishing collected data
