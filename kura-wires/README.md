@@ -144,4 +144,3 @@ The initial version of the PPMP Wire Component for Eclipse Kura supports a subse
     }
 ]
 ```
-}
