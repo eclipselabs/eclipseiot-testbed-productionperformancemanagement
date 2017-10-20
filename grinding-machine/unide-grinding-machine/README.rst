@@ -9,8 +9,10 @@ and sends it to the gateway.
 How to install
 --------------
 
-The easiest way is via direct git checkout and conda environments. To do so,
-follow these steps:
+The easiest way is via direct git checkout and `conda environments
+<https://conda.io>`_ (in case you are not familiar with this, just install
+`miniconda <https://conda.io/miniconda.html>`_ and you are good to go). To do
+so, follow these steps:
 
 - ``git clone <repo-url>``
 - ``cd eclipseiot-testbed-productionperformancemanagement/grinding-machine/unide-grinding-machine``

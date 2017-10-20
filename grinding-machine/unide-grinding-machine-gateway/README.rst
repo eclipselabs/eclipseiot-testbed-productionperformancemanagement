@@ -1,16 +1,19 @@
 Unide Grinding Machine Gateway
 ==============================
 
-This programme simulates the gateway of the Unide grinding machine scenario. It receives PPMP messages
-from the grinding machine, applies some machine learning processes, creates a meaningful result out
-of the raw data, and sends it somewhere else.
+This programme simulates the gateway of the Unide grinding machine scenario. It
+receives PPMP messages from the grinding machine, applies some machine learning
+processes, creates a meaningful result out of the raw data, and sends it
+somewhere else.
 
 
 How to install
 --------------
 
-The easiest way is via direct git checkout and conda environments. To do so,
-follow these steps:
+The easiest way is via direct git checkout and `conda environments
+<https://conda.io>`_ (in case you are not familiar with this, just install
+`miniconda <https://conda.io/miniconda.html>`_ and you are good to go). To do
+so, follow these steps:
 
 - ``git clone <repo-url>``
 - ``cd eclipseiot-testbed-productionperformancemanagement/grinding-machine/unide-grinding-machine-gateway``
@@ -96,5 +99,6 @@ the CLI call would look like this::
  
 (So far, this will only listen on ``localhost:5000``)
 
-This service can be easily addressed by `unide-grinding-machine <../unide-grinding-machine>`_.
+This service can be easily addressed by `unide-grinding-machine
+<../unide-grinding-machine>`_.
 
