@@ -41,7 +41,15 @@ def print_err(msg):
 
 
 def make_message_from_result_type(result, dev_id):
-    dir_path = os.path.join(raw_data, result.lower())
+    result = result.lower()
+
+    if result == 'random':
+        result = random.choice(result_types)
+
+    if result not in result_types:
+        raise ValueError('Not valid result: %s' % result)
+
+    dir_path = os.path.join(raw_data, result)
 
     if not os.path.isdir(dir_path):
         raise Exception(dir_path)
@@ -49,6 +57,9 @@ def make_message_from_result_type(result, dev_id):
     path = os.path.join(dir_path, random.choice(os.listdir(dir_path)))
 
     return make_message_from_file_path(path, dev_id)
+
+
+result_types = ['good', 'medium', 'bad']
 
 
 PERIOD_IN_MS = 20
