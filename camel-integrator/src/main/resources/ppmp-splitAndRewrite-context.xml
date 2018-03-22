@@ -1,0 +1,38 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+	">
+	
+	<bean id="ppmRewrite" class="org.apache.camel.component.urlrewrite.HttpUrlRewrite">
+		<property name="configFile" value="ppmRewrite.xml" />
+		<property name="useContext" value="true" />
+	</bean>
+	<bean id="ppmpRewrite" class="org.apache.camel.component.urlrewrite.HttpUrlRewrite">
+		<property name="configFile" value="ppmpRewrite.xml" />
+		<property name="useContext" value="true" />
+	</bean>
+
+	<camelContext id="splitAndRewrite" xmlns="http://camel.apache.org/schema/spring">
+		<route autoStartup="false">
+			<!-- receive /ppm and /rest (and /someother) posts -->
+			<from
+				uri="jetty:http://0.0.0.0:9090?matchOnUriPrefix=true&amp;httpMethodRestrict=POST" />
+			<multicast>
+				<!-- POST and rewrite /ppm to /rest, if necessary -->
+				<to
+					uri="jetty:http://100.102.4.3:8080?bridgeEndpoint=true&amp;throwExceptionOnFailure=true&amp;urlRewrite=ppmpRewrite" />
+				<!-- POST and rewrite /rest to /ppm, if necessary -->
+				<to
+					uri="jetty:http://100.102.4.11:8080?bridgeEndpoint=true&amp;throwExceptionOnFailure=true&amp;urlRewrite=ppmRewrite" />
+			</multicast>
+			<!-- remove header is somehow important here to return a result to the client -->
+			<removeHeaders pattern="*" />
+			<setBody>
+				<simple>{"result": true }</simple>
+			</setBody>
+		</route>
+	</camelContext>
+</beans>
+

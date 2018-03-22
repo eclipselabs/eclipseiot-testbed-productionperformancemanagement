@@ -1,0 +1,24 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+	">
+
+	<routeContext id="ppmpValidate" xmlns="http://camel.apache.org/schema/spring">
+		<route>
+			<from uri="direct:ppmpValidate"/>
+			<to uri="json-validator:org/eclipse/iot/unide/ppmp/v2/message_schema.json" />
+			<onException>
+				<exception>org.apache.camel.component.jsonvalidator.JsonValidationException</exception>
+				<handled>
+					<constant>true</constant>
+				</handled>
+				<setBody>
+					<simple>{"error": ${exception.message} }</simple>
+				</setBody>
+			</onException>
+		</route>
+	</routeContext>
+</beans>
+

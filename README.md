@@ -5,4 +5,4 @@ This repository contains the material and documentation needed to setup the Ecli
 Subprojects:
 - [Grinding Machine](grinding-machine)
 - [Kura Wires sample application](kura-wires)
-
+- [Apache Camel integrator example](camel-integrator)

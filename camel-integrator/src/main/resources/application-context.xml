@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util.xsd 
+	http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://camel.apache.org/schema/spring
+    http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="properties"
+		class="org.apache.camel.component.properties.PropertiesComponent">
+		<property name="location" value="application.properties" />
+	</bean>
+	
+	<import resource="mqtt-context.xml"/>
+	<import resource="ppmp-splitAndRewrite-context.xml"/>
+	<import resource="ppmp-validate-context.xml"/>
+	<import resource="psi6000-transform-context.xml"/>
+
+	<!-- bean id="jetty" class="org.apache.camel.component.jetty.JettyHttpComponent"> 
+		<property name="sslSocketConnectorProperties"> <map> <entry key="password" 
+		value="unide" /> <entry key="truststore" value="truststore.jks" /> </map> 
+		</property> </bean -->
+
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+		<routeContextRef ref="ppmpValidate"/>
+		
+		<route autoStartup="true">
+			<from uri="jetty:http://0.0.0.0:9090/rest/v2/validate?httpMethodRestrict=POST" />
+			<to uri="direct:ppmpValidate"/>
+
+			<setBody>
+				<simple>{"result": true }</simple>
+			</setBody>
+		</route>
+
+		<!-- route> <!- - every fifteen second */15, every minute (*), 7am-8pm, 
+			day of month not specified, because of MON-FRI (?), every month (*), every 
+			weekday (MON-FRI), no year given- -> <from uri="quartz2://cycletime/heartbeat?cron=0/15+*+7-20+?+*+MON-SAT"/> 
+			</route -->
+	</camelContext>
+</beans>

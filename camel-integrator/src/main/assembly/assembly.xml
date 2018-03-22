@@ -1,0 +1,31 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.2.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.2.2 http://maven.apache.org/xsd/assembly-1.2.2.xsd">
+	<id>assembly</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<fileSets>
+		<fileSet>
+			<outputDirectory></outputDirectory>
+			<directory>${assemblyDirectory}</directory>
+
+			<includes>
+				<include>lib/**</include>
+				<include>bin/**</include>
+				<include>conf/**</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<outputDirectory>bin</outputDirectory>
+			<directory>${project.basedir}/tools</directory>
+
+			<includes>
+				<include>**</include>
+			</includes>
+			<fileMode>0755</fileMode>
+		</fileSet>
+	</fileSets>
+</assembly>
