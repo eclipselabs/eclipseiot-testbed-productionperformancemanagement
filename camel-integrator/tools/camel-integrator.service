@@ -1,0 +1,13 @@
+[Unit]
+Description=Camel integrator for PPMP
+After=syslog.target network.target remote-fs.target mosquitto.service
+
+[Service]
+User=unide
+Type=simple
+WorkingDirectory=/opt/camel-integrator
+ExecStart=/opt/camel-integrator/bin/IntegratorStarter
+Environment=JAVA_HOME=/etc/alternatives/jdk/
+
+[Install]
+WantedBy=multi-user.target

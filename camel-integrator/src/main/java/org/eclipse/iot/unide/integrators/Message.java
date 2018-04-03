@@ -12,12 +12,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "WeldLog"
+    "WeldLog",
+    "DataChangeLog"
 })
 public class Message {
 
     @JsonProperty("WeldLog")
     private WeldLog weldLog;
+    @JsonProperty("DataChangeLog")
+    private DataChangeLog dataChangeLog;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -32,9 +35,10 @@ public class Message {
      * 
      * @param weldLog
      */
-    public Message(WeldLog weldLog) {
+    public Message(WeldLog weldLog, DataChangeLog dataChangeLog) {
         super();
         this.weldLog = weldLog;
+        this.dataChangeLog = dataChangeLog;
     }
 
     @JsonProperty("WeldLog")
@@ -45,6 +49,16 @@ public class Message {
     @JsonProperty("WeldLog")
     public void setWeldLog(WeldLog weldLog) {
         this.weldLog = weldLog;
+    }
+
+    @JsonProperty("DataChangeLog")
+    public DataChangeLog getDataChangeLog() {
+        return dataChangeLog;
+    }
+
+    @JsonProperty("DataChangeLog")
+    public void setDataChangeLog(DataChangeLog dataChangeLog) {
+        this.dataChangeLog = dataChangeLog;
     }
 
     @JsonAnyGetter

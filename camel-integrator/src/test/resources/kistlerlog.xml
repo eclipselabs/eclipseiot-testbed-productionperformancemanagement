@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util.xsd 
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://camel.apache.org/schema/spring
+	http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="fileStore" class="org.apache.camel.processor.idempotent.FileIdempotentRepository">
+		<property name="fileStore" value=".filestore.dat"/>
+		<property name="maxFileStoreSize" value="10240000"/> <!-- 10MB -->
+		<property name="cacheSize" value="50000"/> <!-- 50.000 files -->
+	</bean>
+
+    <bean id="kistlerlog-to-ppmp" class="org.eclipse.iot.unide.integrators.KistlerLog"></bean>
+
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+		<route>
+			<from uri="file://src/test/data?noop=true&amp;maxDepth=2&amp;recursive=true&amp;delay=5000&amp;include=.*\.html$&amp;idempotentRepository=#fileStore&amp;idempotentKey=${file:name.noext}"/>
+			<log message="got file: ${header.CamelFileName}" />
+			<unmarshal>
+				<tidyMarkup/>
+			</unmarshal>
+			<!--removeHeaders pattern="*"/-->
+			<bean ref="kistlerlog-to-ppmp" />
+			<to uri="direct:nextRoute" />
+		</route>
+	
+	</camelContext>
+</beans>
+
+
+

@@ -1,24 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
-	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-	">
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util.xsd 
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://camel.apache.org/schema/spring
+	http://camel.apache.org/schema/spring/camel-spring.xsd">
 
 	<bean id="psi6000-to-ppmp" class="org.eclipse.iot.unide.integrators.PSI6000"></bean>
 	
-	<import resource="postPpmp.xml"/>
-
-	<camelContext id="psi6000Transform" xmlns="http://camel.apache.org/schema/spring">
-
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+		
 		<dataFormats>
 			<json id="psi6000" library="Jackson"
 				unmarshalTypeName="org.eclipse.iot.unide.integrators.PSI6000DataType" />
 		</dataFormats>
 		
-		<route autoStartup="true">
-			<from
-				uri="mqtt://psi6000?host=tcp://{{mqtt.host}}:{{mqtt.port}}&amp;subscribeTopicName={{mqtt.topic.psi6000}}" />
+		<route>
+			<from uri="direct:mqtt" />
 			<!-- from uri="jetty:http://127.0.0.1:8080" /-->
 			<unmarshal ref="psi6000" />
 			<bean ref="psi6000-to-ppmp" />
@@ -35,7 +37,7 @@
 					</setBody>
 					<filter>
 						<simple>${body} != null</simple>
-						<to uri="direct:measurement" />
+						<to uri="mock:measurement" />
 					</filter>
 				</pipeline>
 				<pipeline>
@@ -44,7 +46,7 @@
 					</setBody>
 					<filter>
 						<simple>${body} != null</simple>
-						<to uri="direct:process" />
+						<to uri="mock:process" />
 					</filter>
 				</pipeline>
 				<pipeline>
@@ -53,7 +55,7 @@
 					</setBody>
 					<filter>
 						<simple>${body} != null</simple>
-						<to uri="direct:message" />
+						<to uri="mock:message" />
 					</filter>
 				</pipeline>
 			</multicast>
@@ -62,8 +64,9 @@
 				<simple>{"result": true }</simple>
 			</setBody>
 		</route>
-
+	
 	</camelContext>
 </beans>
+
 
 

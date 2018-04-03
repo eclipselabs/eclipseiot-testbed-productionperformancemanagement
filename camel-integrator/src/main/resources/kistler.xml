@@ -1,0 +1,25 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+	">
+	
+	<bean id="kistlerlog-to-ppmp" class="org.eclipse.iot.unide.integrators.KistlerLog"></bean>
+	
+	<import resource="postPpmp.xml"/>
+
+	<camelContext id="kistlerExamples" xmlns="http://camel.apache.org/schema/spring">
+		<route autoStartup="false">
+			<from uri="file://{{kistler.folder}}?noop=true&amp;maxDepth=2&amp;recursive=true&amp;delay=5000&amp;include=.*\.html$&amp;idempotentRepository=#fileStore&amp;idempotentKey=${file:name.noext}&amp;filterFile=${file:modified} &gt; ${date:now-24h}"/>
+			<log message="got kistler process: ${header.CamelFileName}" />
+			<unmarshal>
+				<tidyMarkup/>
+			</unmarshal>
+			<!--removeHeaders pattern="*"/-->
+			<bean ref="kistlerlog-to-ppmp" />
+			<to uri="direct:process" />
+		</route>
+	</camelContext>
+</beans>
+
