@@ -1,12 +1,13 @@
 package org.eclipse.iot.unide.integrators;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.HashMap;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -14,23 +15,23 @@ import org.apache.camel.Processor;
 import org.eclipse.iot.unide.ppmp.commons.Device;
 import org.eclipse.iot.unide.ppmp.commons.MetaData;
 import org.eclipse.iot.unide.ppmp.measurements.MeasurementsWrapper;
-import org.eclipse.iot.unide.ppmp.process.Process;
-import org.eclipse.iot.unide.ppmp.process.ProcessWrapper;
 import org.eclipse.iot.unide.ppmp.messages.Message.MessageType;
 import org.eclipse.iot.unide.ppmp.messages.MessagesWrapper;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.eclipse.iot.unide.ppmp.process.Process;
+import org.eclipse.iot.unide.ppmp.process.ProcessWrapper;
 
 public class PSI6000 implements Processor {
 
 	private ZoneOffset localTimezoneOffset;
-	
+
 	public PSI6000() {
 		OffsetDateTime odt = OffsetDateTime.now();
 		this.localTimezoneOffset = odt.getOffset();
 	}
 
-	private List<org.eclipse.iot.unide.ppmp.measurements.Measurements> addMeasurementPoint(List<org.eclipse.iot.unide.ppmp.measurements.Measurements> measurements, OffsetDateTime ts, String name, Number value) {
+	private List<org.eclipse.iot.unide.ppmp.measurements.Measurements> addMeasurementPoint(
+			List<org.eclipse.iot.unide.ppmp.measurements.Measurements> measurements, OffsetDateTime ts, String name,
+			Number value) {
 		if (value == null) {
 			return measurements;
 		}
@@ -43,7 +44,7 @@ public class PSI6000 implements Processor {
 
 		measurement.setSeriesMap(seriesMap);
 		measurements.add(measurement);
-		
+
 		return measurements;
 	}
 
@@ -60,7 +61,7 @@ public class PSI6000 implements Processor {
 		Message msg = exchange.getIn();
 		PSI6000DataType doc = msg.getBody(PSI6000DataType.class);
 
-		Object []bundle = new Object[3];
+		Object[] bundle = new Object[3];
 		bundle[0] = transformMeasurement(doc);
 		bundle[1] = transformProcess(doc);
 		bundle[2] = transformMessage(doc);
@@ -78,7 +79,7 @@ public class PSI6000 implements Processor {
 
 	private ProcessWrapper transformProcess(PSI6000DataType doc) {
 		WeldLog wl = doc.getMessage().getWeldLog();
-		if(wl == null) {
+		if (wl == null) {
 			return null;
 		}
 
@@ -87,12 +88,12 @@ public class PSI6000 implements Processor {
 		addProcessCurve(seriesMap, "curentCurve", wl.getCurrentCurve());
 		addProcessCurve(seriesMap, "voltageCurve", wl.getVoltageCurve());
 		addProcessCurve(seriesMap, "forceCurve", wl.getForceCurve());
-		
-		if(((HashMap<String, List<Number>>) seriesMap.getSeries()).size() == 0) {
+
+		if (((HashMap<String, List<Number>>) seriesMap.getSeries()).size() == 0) {
 			return null;
 		}
-		
-		ProcessWrapper wrapper = new ProcessWrapper();		
+
+		ProcessWrapper wrapper = new ProcessWrapper();
 		OffsetDateTime odt = OffsetDateTime.of(wl.getDateTime(), this.localTimezoneOffset);
 
 		// device
@@ -118,20 +119,20 @@ public class PSI6000 implements Processor {
 		// measurements
 		List<org.eclipse.iot.unide.ppmp.process.Measurements> measurements = new LinkedList<org.eclipse.iot.unide.ppmp.process.Measurements>();
 		org.eclipse.iot.unide.ppmp.process.Measurements measurement = new org.eclipse.iot.unide.ppmp.process.Measurements();
-		
+
 		measurement.setTimestamp(odt);
-		
+
 		measurement.setSeriesMap(seriesMap);
 		measurements.add(measurement);
 		wrapper.setMeasurements(measurements);
-		
+
 		return wrapper;
 	}
 
 	private MeasurementsWrapper transformMeasurement(PSI6000DataType doc) {
 		WeldLog wl = doc.getMessage().getWeldLog();
-		
-		if(wl == null) {
+
+		if (wl == null) {
 			return null;
 		}
 
@@ -267,10 +268,10 @@ public class PSI6000 implements Processor {
 		addMeasurementPoint(measurements, ts, "sg_Wear_Length", wl.getSgWearLength());
 		addMeasurementPoint(measurements, ts, "sg_Beam_UpArching", wl.getSgBeamUpArching());
 
-		if(measurements.size() == 0) {
+		if (measurements.size() == 0) {
 			return null;
 		}
-				
+
 		MeasurementsWrapper wrapper = new MeasurementsWrapper();
 		wrapper.setMeasurements(measurements);
 
@@ -289,16 +290,16 @@ public class PSI6000 implements Processor {
 		}
 		return wrapper;
 	}
-	
+
 	private MessagesWrapper transformMessage(PSI6000DataType doc) {
 		DataChangeLog dcl = doc.getMessage().getDataChangeLog();
-		
-		if(dcl == null) {
+
+		if (dcl == null) {
 			return null;
 		}
-		
+
 		MessagesWrapper wrapper = new MessagesWrapper();
-		
+
 		// device
 		Device device = new Device();
 		device.setDeviceID(dcl.getTimerName());
@@ -309,12 +310,13 @@ public class PSI6000 implements Processor {
 		msg.setTimestamp(OffsetDateTime.of(dcl.getDateTime(), this.localTimezoneOffset));
 		msg.setType(MessageType.DEVICE);
 		msg.setTitle("Param #" + dcl.getParamID() + " changed");
-		msg.setDescription("changed from " + dcl.getOldValue() + " to " + dcl.getNewValue() + " at unit #" + dcl.getPhysicalUnitId() + " by " + dcl.getUserName());
-		
+		msg.setDescription("changed from " + dcl.getOldValue() + " to " + dcl.getNewValue() + " at unit #"
+				+ dcl.getPhysicalUnitId() + " by " + dcl.getUserName());
+
 		List<org.eclipse.iot.unide.ppmp.messages.Message> msgs = new LinkedList<org.eclipse.iot.unide.ppmp.messages.Message>();
 		msgs.add(msg);
 		wrapper.setMessages(msgs);
-		
+
 		return wrapper;
 	}
 }

@@ -10,7 +10,7 @@ public class IntegratorMain {
 			main.stop();
 		} else if(!main.isStarted()) {
 			main.setApplicationContextUri("classpath:application-context.xml");
-			main.enableHangupSupport();
+			// main.enableHangupSupport();
 			main.run();
 		}
     }

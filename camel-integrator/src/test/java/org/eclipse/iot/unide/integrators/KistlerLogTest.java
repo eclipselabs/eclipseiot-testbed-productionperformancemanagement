@@ -1,7 +1,5 @@
 package org.eclipse.iot.unide.integrators;
 
-import org.apache.camel.test.spring.CamelSpringTestSupport;
-
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
@@ -13,13 +11,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import org.apache.camel.Exchange;
-import org.junit.After;
-import org.junit.Test;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.apache.camel.test.spring.CamelSpringTestSupport;
 import org.eclipse.iot.unide.ppmp.process.Measurements;
 // import org.springframework.test.context.ContextConfiguration;
 import org.eclipse.iot.unide.ppmp.process.Process.Result;
 import org.eclipse.iot.unide.ppmp.process.ProcessWrapper;
+import org.junit.After;
+import org.junit.Test;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class KistlerLogTest extends CamelSpringTestSupport {
 

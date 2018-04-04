@@ -1,7 +1,5 @@
 package org.eclipse.iot.unide.integrators;
 
-import org.apache.camel.test.spring.CamelSpringTestSupport;
-
 import java.io.FileInputStream;
 import java.io.InputStream;
 
@@ -15,6 +13,7 @@ import com.networknt.schema.JsonSchemaFactory;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.test.spring.CamelSpringTestSupport;
 import org.apache.camel.util.IOHelper;
 import org.apache.camel.util.ResourceHelper;
 import org.eclipse.iot.unide.ppmp.measurements.MeasurementsWrapper;
@@ -27,7 +26,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class PSI6000MqttTest extends CamelSpringTestSupport {
 
 	private ObjectMapper mapper;
-	
+
 	private JsonSchema measurementSchema;
 	private JsonSchema processSchema;
 	private JsonSchema messageSchema;
@@ -40,30 +39,30 @@ public class PSI6000MqttTest extends CamelSpringTestSupport {
 
 	@EndpointInject(uri = "mock:message")
 	protected MockEndpoint mockMessage;
-	
+
 	/*
 	@Override
 	public boolean isUseDebugger() {
 		return true;
 	}
 	 */
-	
+
 	@Before
 	public void setupObjectMapper() throws Exception {
 		mapper = new ObjectMapper();
 		mapper.registerModule(new JavaTimeModule());
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		mapper.setSerializationInclusion(Include.NON_NULL);		
-		
+		mapper.setSerializationInclusion(Include.NON_NULL);
+
 		InputStream schemaStream;
 		schemaStream = ResourceHelper.resolveMandatoryResourceAsInputStream(context,
 				"/org/eclipse/iot/unide/ppmp/v2/process_schema.json");
 		processSchema = JsonSchemaFactory.getInstance().getSchema(schemaStream);
-		
+
 		schemaStream = ResourceHelper.resolveMandatoryResourceAsInputStream(context,
 				"/org/eclipse/iot/unide/ppmp/v2/measurement_schema.json");
 		measurementSchema = JsonSchemaFactory.getInstance().getSchema(schemaStream);
-		
+
 		schemaStream = ResourceHelper.resolveMandatoryResourceAsInputStream(context,
 				"/org/eclipse/iot/unide/ppmp/v2/message_schema.json");
 		messageSchema = JsonSchemaFactory.getInstance().getSchema(schemaStream);
@@ -80,7 +79,8 @@ public class PSI6000MqttTest extends CamelSpringTestSupport {
 
 		mockMeasurement.expectedMessageCount(1);
 		mockMeasurement.assertIsSatisfied();
-		MeasurementsWrapper measurementsWrapper = mockMeasurement.getExchanges().get(0).getMessage().getBody(MeasurementsWrapper.class);
+		MeasurementsWrapper measurementsWrapper = mockMeasurement.getExchanges().get(0).getMessage()
+				.getBody(MeasurementsWrapper.class);
 		deviceId = measurementsWrapper.getDevice().getDeviceID();
 		assertEquals("UIR Testrack 24", deviceId);
 		node = mapper.readTree(mapper.writeValueAsString(measurementsWrapper));
@@ -109,7 +109,7 @@ public class PSI6000MqttTest extends CamelSpringTestSupport {
 
 		mockMeasurement.expectedMessageCount(0);
 		mockMeasurement.assertIsSatisfied();
-		
+
 		mockProcess.expectedMessageCount(0);
 		mockProcess.assertIsSatisfied();
 
