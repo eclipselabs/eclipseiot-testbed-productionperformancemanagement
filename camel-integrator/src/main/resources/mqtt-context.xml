@@ -17,7 +17,7 @@
 
 		<route autoStartup="false">
 			<from
-				uri="mqtt://psi6000?host=tcp://{{mqtt.host}}:{mqtt.port}}&amp;subscribeTopicName={{mqtt.topic.measurements}}" />
+				uri="mqtt://psi6000?host=tcp://{{mqtt.host}}:{{mqtt.port}}&amp;subscribeTopicName={{mqtt.topic.measurements}}" />
 			<log message="got measurement: ${body}" />
 			<to
 				uri="jetty:${ppmpServerBase}/measurement?bridgeEndpoint=true&amp;throwExceptionOnFailure=true" />

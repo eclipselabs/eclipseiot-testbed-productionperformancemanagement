@@ -16,7 +16,7 @@
 				unmarshalTypeName="org.eclipse.iot.unide.integrators.PSI6000DataType" />
 		</dataFormats>
 		
-		<route autoStartup="true">
+		<route autoStartup="false">
 			<from
 				uri="mqtt://psi6000?host=tcp://{{mqtt.host}}:{{mqtt.port}}&amp;subscribeTopicName={{mqtt.topic.psi6000}}" />
 			<!-- from uri="jetty:http://127.0.0.1:8080" /-->

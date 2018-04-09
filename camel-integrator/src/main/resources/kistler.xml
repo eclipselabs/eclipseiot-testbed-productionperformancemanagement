@@ -5,6 +5,12 @@
 	http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
 	">
 	
+	<bean id="fileStore" class="org.apache.camel.processor.idempotent.FileIdempotentRepository">
+		<property name="fileStore" value=".filestore.dat"/>
+		<property name="maxFileStoreSize" value="10240000"/> <!-- 10MB -->
+		<property name="cacheSize" value="50000"/> <!-- 50.000 files -->
+	</bean>
+
 	<bean id="kistlerlog-to-ppmp" class="org.eclipse.iot.unide.integrators.KistlerLog"></bean>
 	
 	<import resource="postPpmp.xml"/>
