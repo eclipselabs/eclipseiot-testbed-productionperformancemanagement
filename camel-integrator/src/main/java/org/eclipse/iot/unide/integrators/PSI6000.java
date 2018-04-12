@@ -2,6 +2,7 @@ package org.eclipse.iot.unide.integrators;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -85,13 +86,21 @@ public class PSI6000 implements Processor {
 
 		//values
 		org.eclipse.iot.unide.ppmp.process.SeriesMap seriesMap = new org.eclipse.iot.unide.ppmp.process.SeriesMap();
-		addProcessCurve(seriesMap, "curentCurve", wl.getCurrentCurve());
-		addProcessCurve(seriesMap, "voltageCurve", wl.getVoltageCurve());
-		addProcessCurve(seriesMap, "forceCurve", wl.getForceCurve());
-
+		List<Number> cc = wl.getCurrentCurve();
+		List<Number> vc = wl.getVoltageCurve();
+		List<Number> fc = wl.getForceCurve();
+		addProcessCurve(seriesMap, "curentCurve", cc);
+		addProcessCurve(seriesMap, "voltageCurve", vc);
+		addProcessCurve(seriesMap, "forceCurve", fc);
 		if (((HashMap<String, List<Number>>) seriesMap.getSeries()).size() == 0) {
 			return null;
 		}
+		List<Number> time = new LinkedList<Number>();
+		int maxLength = Math.max(cc.size(), Math.max(vc.size(), fc.size()));
+		for(int i = 0; i<maxLength; i++) {
+			time.add(i);
+		}
+		seriesMap.setSeriesValue("time", time);
 
 		ProcessWrapper wrapper = new ProcessWrapper();
 		OffsetDateTime odt = OffsetDateTime.of(wl.getDateTime(), this.localTimezoneOffset);
@@ -112,7 +121,7 @@ public class PSI6000 implements Processor {
 
 		// process
 		Process process = new Process();
-		process.setTimestamp(odt);
+		process.setTimestamp(odt.minus(maxLength, ChronoUnit.MILLIS));
 		process.setExternalProcessId(String.valueOf(wl.getProtRecordID()));
 		wrapper.setProcess(process);
 
@@ -120,7 +129,7 @@ public class PSI6000 implements Processor {
 		List<org.eclipse.iot.unide.ppmp.process.Measurements> measurements = new LinkedList<org.eclipse.iot.unide.ppmp.process.Measurements>();
 		org.eclipse.iot.unide.ppmp.process.Measurements measurement = new org.eclipse.iot.unide.ppmp.process.Measurements();
 
-		measurement.setTimestamp(odt);
+		measurement.setTimestamp(odt.minus(maxLength, ChronoUnit.MILLIS));
 
 		measurement.setSeriesMap(seriesMap);
 		measurements.add(measurement);
@@ -293,25 +302,37 @@ public class PSI6000 implements Processor {
 
 	private MessagesWrapper transformMessage(PSI6000DataType doc) {
 		DataChangeLog dcl = doc.getMessage().getDataChangeLog();
+		WeldFaultLog wfl = doc.getMessage().getWeldFaultLog();
 
-		if (dcl == null) {
+		if (dcl == null && wfl == null) {
 			return null;
 		}
-
 		MessagesWrapper wrapper = new MessagesWrapper();
-
-		// device
 		Device device = new Device();
-		device.setDeviceID(dcl.getTimerName());
+		
+		if(dcl != null) {
+			// device
+			device.setDeviceID(dcl.getTimerName());
+		} else {
+			device.setDeviceID(wfl.getTimerName());
+		}
 		wrapper.setDevice(device);
 
 		org.eclipse.iot.unide.ppmp.messages.Message msg = new org.eclipse.iot.unide.ppmp.messages.Message();
-		msg.setCode(dcl.getProtRecordID().toString());
-		msg.setTimestamp(OffsetDateTime.of(dcl.getDateTime(), this.localTimezoneOffset));
 		msg.setType(MessageType.DEVICE);
-		msg.setTitle("Param #" + dcl.getParamID() + " changed");
-		msg.setDescription("changed from " + dcl.getOldValue() + " to " + dcl.getNewValue() + " at unit #"
-				+ dcl.getPhysicalUnitId() + " by " + dcl.getUserName());
+
+		if(dcl != null) {
+			msg.setCode(dcl.getProtRecordID().toString());
+			msg.setTimestamp(OffsetDateTime.of(dcl.getDateTime(), this.localTimezoneOffset));
+			msg.setTitle("Param #" + dcl.getParamID() + " changed");
+			msg.setDescription("changed from " + dcl.getOldValue() + " to " + dcl.getNewValue() + " at unit #"
+					+ dcl.getPhysicalUnitId() + " by " + dcl.getUserName());
+		} else {
+			msg.setCode(wfl.getProtRecordID().toString());
+			msg.setTimestamp(OffsetDateTime.of(wfl.getDateTime(), this.localTimezoneOffset));
+			msg.setTitle("Weld fault");
+			msg.setDescription("Weld Prog Value " + wfl.getWeldProgValue() + " / actual: " + wfl.getWeldActualValue());
+		}
 
 		List<org.eclipse.iot.unide.ppmp.messages.Message> msgs = new LinkedList<org.eclipse.iot.unide.ppmp.messages.Message>();
 		msgs.add(msg);

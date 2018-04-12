@@ -1,0 +1,31 @@
+{
+  "Name": "Actual/WF/UIR Testrack 33/",
+  "WeldTimer": "UIR Testrack 33",
+  "TimeStamp": "2018-03-05T11:16:26.2841658+01:00",
+  "OutputFormat": "JSON",
+  "Message": {
+    "WeldFaultLog": {
+      "dateTime": "2017-11-23T14:15:50.42",
+      "protRecord_ID": 225,
+      "timerName": "UIR Testrack 33",
+      "progNo": 0,
+      "monitorState": 104,
+      "regulationState": 0,
+      "measureState": 0,
+      "weldProgValue": 3,
+      "weldActualValue": 0,
+      "timeProgValue": null,
+      "timeActualValue": null,
+      "wear": 9537888,
+      "spotName": "",
+      "isError": true,
+      "spotDiaDemand": null,
+      "spotDiaActual": null,
+      "uspDemand": null,
+      "uspActual": null,
+      "stzvDemand": null,
+      "stzvActual": null,
+      "partIdentString": null
+    }
+  }
+}

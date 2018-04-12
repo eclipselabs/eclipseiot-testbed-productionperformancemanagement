@@ -92,6 +92,7 @@ public class PSI6000MqttTest extends CamelSpringTestSupport {
 		deviceId = processWrapper.getDevice().getDeviceID();
 		assertEquals("UIR Testrack 24", deviceId);
 		node = mapper.readTree(mapper.writeValueAsString(processWrapper));
+		String str = node.toString();
 		assertEquals(0, processSchema.validate(node).size());
 
 		mockMessage.expectedMessageCount(0);
@@ -118,6 +119,30 @@ public class PSI6000MqttTest extends CamelSpringTestSupport {
 		MessagesWrapper messagesWrapper = mockMessage.getExchanges().get(0).getMessage().getBody(MessagesWrapper.class);
 		deviceId = messagesWrapper.getDevice().getDeviceID();
 		assertEquals("UIR Testrack 21", deviceId);
+		node = mapper.readTree(mapper.writeValueAsString(messagesWrapper));
+		assertEquals(0, messageSchema.validate(node).size());
+	}
+
+	@Test
+	public void testTransformWeldFaultLog() throws Exception {
+
+		String inputPayload = IOHelper.loadText(new FileInputStream("src/test/data/WFL.json")).trim();
+		sendBody("direct:mqtt", inputPayload);
+
+		String deviceId;
+		JsonNode node;
+
+		mockMeasurement.expectedMessageCount(0);
+		mockMeasurement.assertIsSatisfied();
+
+		mockProcess.expectedMessageCount(0);
+		mockProcess.assertIsSatisfied();
+
+		mockMessage.expectedMessageCount(1);
+		mockMessage.assertIsSatisfied();
+		MessagesWrapper messagesWrapper = mockMessage.getExchanges().get(0).getMessage().getBody(MessagesWrapper.class);
+		deviceId = messagesWrapper.getDevice().getDeviceID();
+		assertEquals("UIR Testrack 33", deviceId);
 		node = mapper.readTree(mapper.writeValueAsString(messagesWrapper));
 		assertEquals(0, messageSchema.validate(node).size());
 	}
