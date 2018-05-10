@@ -1,0 +1,110 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+	">
+
+	<camelContext id="postPpmp" xmlns="http://camel.apache.org/schema/spring">
+
+		<dataFormats>
+			<json id="ppmpMeasurementMessage" library="Jackson"
+				unmarshalTypeName="org.eclipse.iot.unide.ppmp.measurements.MeasurementsWrapper"
+				moduleClassNames="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"
+				disableFeatures="WRITE_DATES_AS_TIMESTAMPS" include="NON_NULL" />
+			<json id="ppmpProcessMessage" library="Jackson"
+				unmarshalTypeName="org.eclipse.iot.unide.ppmp.process.ProcessWrapper"
+				moduleClassNames="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"
+				disableFeatures="WRITE_DATES_AS_TIMESTAMPS" include="NON_NULL" />
+			<json id="ppmpMessagesMessage" library="Jackson"
+				unmarshalTypeName="org.eclipse.iot.unide.ppmp.messages.MessagesWrapper"
+				moduleClassNames="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"
+				disableFeatures="WRITE_DATES_AS_TIMESTAMPS" include="NON_NULL" />
+		</dataFormats>
+		
+		<route>
+			<from uri="direct:measurement" />
+			<marshal ref="ppmpMeasurementMessage" />
+			<setHeader headerName="Content-Length">
+				<simple>body.length</simple>
+			</setHeader>
+			<to
+				uri="jetty:${ppmpServerBase}/measurement?bridgeEndpoint=true&amp;throwExceptionOnFailure=true" /> <!-- &amp;proxyHost=127.0.0.1&amp;proxyPort=3128" -->
+			<log message="measurement sent" />
+
+			<onException>
+				<exception>java.net.UnknownHostException</exception>
+				<handled>
+					<constant>true</constant>
+				</handled>
+				<setBody>
+					<simple>{"result": false }</simple>
+				</setBody>
+				<log message="Unknown host. Need to set proxy?" />
+			</onException>
+			<onException>
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="3"
+					redeliveryDelay="1000" useExponentialBackOff="true"
+					asyncDelayedRedelivery="true" backOffMultiplier="2" logHandled="true"
+					logRetryAttempted="true" retryAttemptedLogLevel="ERROR" />
+				<log message="Response error: ${in.body}" />
+			</onException>
+		</route>
+
+		<route>
+			<from uri="direct:process" />
+			<marshal ref="ppmpProcessMessage" />
+			<setHeader headerName="Content-Length">
+				<simple>body.length</simple>
+			</setHeader>
+			<to
+				uri="jetty:${ppmpServerBase}/process?bridgeEndpoint=true&amp;throwExceptionOnFailure=true" /> <!-- &amp;proxyHost=127.0.0.1&amp;proxyPort=3128 -->
+			<log message="process sent" />
+
+			<onException>
+				<exception>java.net.UnknownHostException</exception>
+				<handled>
+					<constant>true</constant>
+				</handled>
+				<setBody>
+					<simple>{"result": false }</simple>
+				</setBody>
+				<log message="Unknown host. Need to set proxy?" />
+			</onException>
+			<onException>
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="3"
+					redeliveryDelay="1000" useExponentialBackOff="true"
+					asyncDelayedRedelivery="true" backOffMultiplier="2" logHandled="true"
+					logRetryAttempted="true" retryAttemptedLogLevel="ERROR" />
+				<log message="Response error: ${in.body}" />
+			</onException>
+		</route>
+		
+		<route>
+			<from uri="direct:message" />
+			<marshal ref="ppmpMessagesMessage" />
+			<setHeader headerName="Content-Length">
+				<simple>body.length</simple>
+			</setHeader>
+			<to uri="jetty:http://${ppmpServerBase}/message" /> <!-- &amp;proxyHost=127.0.0.1&amp;proxyPort=3128 -->
+
+			<onException>
+				<exception>java.net.UnknownHostException</exception>
+				<handled>
+					<constant>true</constant>
+				</handled>
+				<log message="Unknown host. Need to set proxy?" />
+			</onException>
+			<onException>
+				<exception>java.lang.Exception</exception>
+				<redeliveryPolicy maximumRedeliveries="3"
+					redeliveryDelay="1000" useExponentialBackOff="true"
+					asyncDelayedRedelivery="true" backOffMultiplier="2" logHandled="true"
+					logRetryAttempted="true" retryAttemptedLogLevel="ERROR" />
+				<log message="Response error: ${in.body}" />
+			</onException>
+		</route>
+	</camelContext>
+</beans>

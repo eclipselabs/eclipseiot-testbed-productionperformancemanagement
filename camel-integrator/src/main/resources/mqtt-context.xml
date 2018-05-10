@@ -8,15 +8,16 @@
 	<camelContext id="mqttExamples" xmlns="http://camel.apache.org/schema/spring">
 		<route autoStartup="false">
 			<from
-				uri="mqtt://psi6000?host=tcp://192.168.123.135:1883&amp;subscribeTopicName=PSI6000//PROCESS/PPMP/PROCESS" />
+				uri="mqtt://psi6000?host=tcp://{{mqtt.host}}:{{mqtt.port}}&amp;subscribeTopicName={{mqtt.topic.processes}}" />
 			<log message="got process: ${body}" />
 			<to
 				uri="jetty:${ppmpServerBase}/process?bridgeEndpoint=true&amp;throwExceptionOnFailure=true" />
 			<!-- &amp;proxyHost=127.0.0.1&amp;proxyPort=3128" -->
 		</route>
+
 		<route autoStartup="false">
 			<from
-				uri="mqtt://psi6000?host=tcp://192.168.123.135:1883&amp;subscribeTopicName=PSI6000//PROCESS/PPMP/MEASUREMENT" />
+				uri="mqtt://psi6000?host=tcp://{{mqtt.host}}:{{mqtt.port}}&amp;subscribeTopicName={{mqtt.topic.measurements}}" />
 			<log message="got measurement: ${body}" />
 			<to
 				uri="jetty:${ppmpServerBase}/measurement?bridgeEndpoint=true&amp;throwExceptionOnFailure=true" />

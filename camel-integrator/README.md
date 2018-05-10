@@ -33,6 +33,11 @@ All dependencies are listed in the `pom.xml`. Among them:
 
 ## Run
 
+For a quick testrun, use
+```bash
+mvn exec:java
+```
+
 To build this project use
 ```bash
 mvn package

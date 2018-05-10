@@ -1,5 +1,7 @@
 /target/
 /.settings/
 /.classpath
+/.vscode
+/.sts4-cache
 /.project
 *.log

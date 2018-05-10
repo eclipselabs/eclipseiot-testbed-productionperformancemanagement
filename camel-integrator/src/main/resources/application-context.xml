@@ -9,7 +9,6 @@
     http://www.springframework.org/schema/beans/spring-beans.xsd
     http://camel.apache.org/schema/spring
     http://camel.apache.org/schema/spring/camel-spring.xsd">
-
 	<bean id="properties"
 		class="org.apache.camel.component.properties.PropertiesComponent">
 		<property name="location" value="application.properties" />
@@ -19,6 +18,7 @@
 	<import resource="ppmp-splitAndRewrite-context.xml"/>
 	<import resource="ppmp-validate-context.xml"/>
 	<import resource="psi6000-transform-context.xml"/>
+	<import resource="kistler.xml"/>
 
 	<!-- bean id="jetty" class="org.apache.camel.component.jetty.JettyHttpComponent"> 
 		<property name="sslSocketConnectorProperties"> <map> <entry key="password" 

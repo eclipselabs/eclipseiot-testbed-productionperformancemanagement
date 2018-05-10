@@ -1,0 +1,23 @@
+{
+  "Name": "Actual/DC/UIR Testrack 21/",
+  "WeldTimer": "UIR Testrack 21",
+  "TimeStamp": "2018-03-05T11:15:57.8795052+01:00",
+  "OutputFormat": "JSON",
+  "Message": {
+    "DataChangeLog": {
+      "timerName": "UIR Testrack 21",
+      "protRecord_ID": 8520,
+      "dateTime": "2016-08-31T13:11:56.62",
+      "param_ID": 423,
+      "subIndex": 200,
+      "oldValue": "0",
+      "newValue": "7,51",
+      "oldNormValue": "0",
+      "newNormValue": "7,51",
+      "physicalUnitId": 4,
+      "computerName": "36894",
+      "userName": "Developer",
+      "comment": ""
+    }
+  }
+}
